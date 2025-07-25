@@ -10,6 +10,19 @@ export const usePokemonList = (offset: number = 0, limit: number = 20) => {
   });
 };
 
+export const usePokemonListWithPagination = (offset: number = 0, limit: number = 20) => {
+  const query = usePokemonList(offset, limit);
+
+  const totalCount = query.data?.count || 0;
+
+  return {
+    ...query,
+    totalCount,
+    currentPage: Math.floor(offset / limit) + 1,
+    totalPages: Math.ceil(totalCount / limit),
+  };
+};
+// -------------------------------------------------------------------------------------------------
 export const usePokemon = (nameOrId: string | number) => {
   return useQuery({
     queryKey: ['pokemon', nameOrId],
@@ -18,15 +31,7 @@ export const usePokemon = (nameOrId: string | number) => {
     staleTime: 10 * 60 * 1000, // 10 minutes
   });
 };
-
-export const usePokemonByUrl = (url: string) => {
-  return useQuery({
-    queryKey: ['pokemon-by-url', url],
-    queryFn: () => pokemonApi.getPokemonByUrl(url),
-    enabled: !!url,
-    staleTime: 10 * 60 * 1000, // 10 minutes
-  });
-};
+// -------------------------------------------------------------------------------------------------
 
 export const useInfinitePokemonList = (limit?: number) => {
   const limitValue = limit || 20;

@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useCallback } from 'react';
-import { useInfinitePokemonList } from '../hooks/usePokemonList';
-import { useLastItemVisible } from '../hooks/use-infinite-scroll-pagination';
+import React from 'react';
+import { useInfinitePokemonList } from '../../hooks/usePokemonList';
+import { useLastItemVisible } from '../../hooks/use-infinite-scroll-pagination';
+import { pageItemsCount } from '../../utils/consts';
 
-export const PokemonsPage: React.FC = () => {
+export const PokemonsInfinitePagination: React.FC = () => {
   const {
     data,
     error,
@@ -10,7 +11,7 @@ export const PokemonsPage: React.FC = () => {
     hasNextPage,
     isFetchingNextPage,
     isLoading
-  } = useInfinitePokemonList(20);
+  } = useInfinitePokemonList(pageItemsCount);
 
   const { lastItemRef } = useLastItemVisible(
     () => {
@@ -24,6 +25,7 @@ export const PokemonsPage: React.FC = () => {
     },
     isLoading || isFetchingNextPage,
   );
+
   const pokimons = data?.pages.flatMap((page) => page.results) || [];
 
   if (error) {

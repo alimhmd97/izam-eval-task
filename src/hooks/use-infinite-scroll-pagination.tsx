@@ -22,7 +22,6 @@ export const useLastItemVisible = (
   } = options;
 
   useEffect(() => {
-    console.log('fetxhing');
 
     const element = lastItemRef.current;
     if (!element) return;
@@ -31,9 +30,6 @@ export const useLastItemVisible = (
       ([entry]) => {
         const visible = entry.isIntersecting;
         setIsVisible(visible);
-
-
-
         if (visible && callback) {
           callback();
         }
