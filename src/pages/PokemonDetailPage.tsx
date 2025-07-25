@@ -6,8 +6,7 @@ export const PokemonDetailPage: React.FC = () => {
 
   return (
     <div>
-      <h1>Pokemon Detail Page</h1>
-      <p>This is the page for Pokemon with ID: {id}</p>
+     
     </div>
   );
 }; 
