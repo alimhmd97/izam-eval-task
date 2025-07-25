@@ -2,6 +2,17 @@ import React from 'react';
 import { useInfinitePokemonList } from '../../hooks/usePokemonList';
 import { useLastItemVisible } from '../../hooks/use-infinite-scroll-pagination';
 import { pageItemsCount } from '../../utils/consts';
+import {
+  Box,
+  Container,
+  Typography,
+  CircularProgress,
+  Alert,
+  AlertTitle,
+  Paper
+} from '@mui/material';
+import { Error as ErrorIcon } from '@mui/icons-material';
+import PokemonCard from './_components/pokemon-card';
 
 export const PokemonsInfinitePagination: React.FC = () => {
   const {
@@ -26,76 +37,132 @@ export const PokemonsInfinitePagination: React.FC = () => {
     isLoading || isFetchingNextPage,
   );
 
-  const pokimons = data?.pages.flatMap((page) => page.results) || [];
+  const pokemons = data?.pages.flatMap((page) => page.results) || [];
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Error Loading Pokemon</h2>
-          <p className="text-gray-600">Please try again later.</p>
-        </div>
-      </div>
+      <Box
+        sx={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          bgcolor: 'grey.50'
+        }}
+      >
+        <Alert
+          severity="error"
+          icon={<ErrorIcon />}
+          sx={{ maxWidth: 400 }}
+        >
+          <AlertTitle>Error Loading Pokemon</AlertTitle>
+          Please try again later.
+        </Alert>
+      </Box>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
-          Pokemon Collection
-        </h1>
+    <Box sx={{ minHeight: '100vh' }}>
+      <Typography
+        variant="h3"
+        component="h1"
+        align="center"
+        sx={{
+          mb: 4,
+          fontWeight: 'bold',
+          color: 'text.primary'
+        }}
+      >
+        Pokemon Collection
+      </Typography>
 
-        {isLoading ? (
-          <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          </div>
-        ) : (
+      {isLoading ? (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            py: 10
+          }}
+        >
+          <CircularProgress size={60} />
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 3,
+            justifyContent: 'center'
+          }}
+        >
+          {pokemons.map((pokemon, index) => {
+            const isLastElement = index === pokemons.length - 1;
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-            {pokimons.map((pokemon, index) => {
-              const isLastElement = index === pokimons.length - 1
+            return (
+              <Box
+                key={index}
+                ref={isLastElement ? lastItemRef : undefined}
+                sx={{
+                  flex: '0 0 auto',
+                  width: {
+                    xs: '100%',
+                    sm: 'calc(50% - 12px)',
+                    md: 'calc(33.333% - 16px)',
+                    lg: 'calc(25% - 18px)',
+                    xl: 'calc(20% - 19.2px)'
+                  },
+                  maxWidth: {
+                    xs: '100%',
+                    sm: 'calc(50% - 12px)',
+                    md: 'calc(33.333% - 16px)',
+                    lg: 'calc(25% - 18px)',
+                    xl: 'calc(20% - 19.2px)'
+                  }
+                }}
+              >
 
-              return (
-                <div
-                  key={index}
-                  ref={isLastElement ? lastItemRef : undefined}
-                >
-                  <PokemonListItem pokemon={pokemon} />
-                </div>
+                <PokemonCard
+                  imageUrl={pokemon.url}
+                  index={index}
+                  name={pokemon.name}
+                />
+              </Box>
+            );
+          })}
+        </Box>
+      )}
 
-              )
-            }
-            )}
-          </div>
-        )}
+      {isFetchingNextPage && (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            py: 4,
+            gap: 2
+          }}
+        >
+          <CircularProgress size={24} />
+          <Typography variant="body2" color="text.secondary">
+            Loading more Pokemon...
+          </Typography>
+        </Box>
+      )}
 
-        {isFetchingNextPage && (
-          <div className="flex justify-center items-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-            <span className="ml-3 text-gray-600">Loading more Pokemon...</span>
-          </div>
-        )}
-
-        {!hasNextPage && data && data.pages.length > 0 && (
-          <div className="text-center py-8">
-            <p className="text-gray-600">You've seen all Pokemon!</p>
-          </div>
-        )}
-      </div>
-    </div>
+      {!hasNextPage && data && data.pages.length > 0 && (
+        <Box
+          sx={{
+            textAlign: 'center',
+            py: 4
+          }}
+        >
+          <Typography variant="body1" color="text.secondary">
+            You've seen all Pokemon!
+          </Typography>
+        </Box>
+      )}
+    </Box>
   );
 };
-
-// Component to fetch and display individual Pokemon
-const PokemonListItem: React.FC<{ pokemon: { name: string; url: string } }> = ({ pokemon }) => {
-
-
-  return (
-    <div className="bg-white rounded-lg shadow-md p-4 animate-pulse h-[200px]">
-      <div className="bg-gray-300 h-32 rounded mb-3 ">{pokemon.name}</div>
-
-    </div>
-
-  )
-}; 

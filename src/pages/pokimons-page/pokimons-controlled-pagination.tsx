@@ -1,4 +1,3 @@
-import React from 'react';
 import {
     Container,
     Card,
@@ -12,11 +11,10 @@ import {
 import { usePokemonListWithPagination } from '../../hooks/usePokemonList';
 import { usePagination } from '../../hooks/usePagination';
 import { PaginationControls } from '../../components/PaginationControls';
-import { useNavigate } from 'react-router-dom';
+import PokemonCard from './_components/pokemon-card';
 
 export default function PokimonsControlledPagination() {
     const { currentPageSize, offset } = usePagination(0);
-    const navigate = useNavigate()
     const {
         data,
         error,
@@ -46,34 +44,84 @@ export default function PokimonsControlledPagination() {
                 Try changing the page or page size - the URL will update automatically!
             </Typography>
 
-            {/* Pokemon List */}
             <Box sx={{ mb: 3 }}>
                 {isLoading ? (
-                    // Loading skeletons
-                    Array.from({ length: currentPageSize }).map((_, index) => (
-                        <Card key={index} sx={{ mb: 2 }}  >
-                            <CardContent>
-                                <Skeleton variant="text" width="60%" height={24} />
-                                <Skeleton variant="text" width="40%" height={20} />
-                            </CardContent>
-                        </Card>
-                    ))
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            gap: 2,
+                        }}
+                    >
+                        {Array.from({ length: currentPageSize }).map((_, index) => (
+                            <Box
+                                key={index}
+                                sx={{
+                                    flex: '0 0 auto',
+                                    width: {
+                                        xs: '100%',
+                                        sm: 'calc(50% - 12px)',
+                                        md: 'calc(33.333% - 16px)',
+                                        lg: 'calc(25% - 18px)',
+                                        xl: 'calc(20% - 19.2px)'
+                                    },
+                                    maxWidth: {
+                                        xs: '100%',
+                                        sm: 'calc(50% - 12px)',
+                                        md: 'calc(33.333% - 16px)',
+                                        lg: 'calc(25% - 18px)',
+                                        xl: 'calc(20% - 19.2px)'
+                                    }
+                                }}
+                            >
+                                <Card sx={{ mb: 2 }}>
+                                    <CardContent>
+                                        <Skeleton variant="text" width="60%" height={24} />
+                                        <Skeleton variant="text" width="40%" height={20} />
+                                    </CardContent>
+                                </Card>
+                            </Box>
+                        ))}
+                    </Box>
                 ) : (
                     // Pokemon cards
-                    data?.results.map((pokemon, index) => (
-                        <Card onClick={() => {
-                            navigate(`/pokemon/${pokemon?.name}`)
-                        }} key={pokemon.name} sx={{ mb: 2 }}>
-                            <CardContent>
-                                <Typography variant="h6" component="h2" gutterBottom>
-                                    {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    ID: {offset + index + 1}
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    ))
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            gap: 2,
+                        }}
+                    >
+                        {data?.results.map((pokemon, index) => (
+                            <Box
+                                key={pokemon.name}
+
+                                sx={{
+                                    flex: '0 0 auto',
+                                    width: {
+                                        xs: '100%',
+                                        sm: 'calc(50% - 12px)',
+                                        md: 'calc(33.333% - 16px)',
+                                        lg: 'calc(25% - 18px)',
+                                        xl: 'calc(20% - 19.2px)'
+                                    },
+                                    maxWidth: {
+                                        xs: '100%',
+                                        sm: 'calc(50% - 12px)',
+                                        md: 'calc(33.333% - 16px)',
+                                        lg: 'calc(25% - 18px)',
+                                        xl: 'calc(20% - 19.2px)'
+                                    }
+                                }}
+                            >
+                                <PokemonCard
+                                    imageUrl={pokemon.url}
+                                    index={offset + index + 1}
+                                    name={pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
+                                />
+                            </Box>
+                        ))}
+                    </Box>
                 )}
             </Box>
 

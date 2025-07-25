@@ -37,18 +37,20 @@ export const useInfinitePokemonList = (limit?: number) => {
   const limitValue = limit || 20;
   return useInfiniteQuery({
     queryKey: ['pokemon-list-infinite', limitValue],
-    queryFn: async ({ pageParam = 0 }) => {
-      const response = await fetch(
-        `https://pokeapi.co/api/v2/pokemon?offset=${pageParam}&limit=${limitValue}`
-      );
+    queryFn: async ({ pageParam = 0 }) => pokemonApi.getPokemonList(pageParam, limitValue),
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch Pokemon list');
-      }
+    // queryFn: async ({ pageParam = 0 }) => {
+    //   const response = await fetch(
+    //     `https://pokeapi.co/api/v2/pokemon?offset=${pageParam}&limit=${limitValue}`
+    //   );
 
-      const data: PokemonListResponse = await response.json();
-      return data;
-    },
+    //   if (!response.ok) {
+    //     throw new Error('Failed to fetch Pokemon list');
+    //   }
+
+    //   const data: PokemonListResponse = await response.json();
+    //   return data;
+    // },
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {
       if (lastPage.next) {

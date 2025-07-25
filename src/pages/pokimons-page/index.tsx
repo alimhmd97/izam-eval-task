@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { PokemonsInfinitePagination } from './pokemons-infinite-pagination'
 import PokimonsControlledPagination from './pokimons-controlled-pagination'
-import { Button } from '@mui/material'
+import { Box, Button, Container } from '@mui/material'
+import PokemonsPage from './pokemons-page'
 
-type PaginationMode = 'infinite-pagination' | 'controlled-pagination'
+export type PaginationMode = 'infinite-pagination' | 'controlled-pagination'
 
 export default function Index() {
     const [searchParams, setSearchParams] = useSearchParams()
@@ -22,17 +23,19 @@ export default function Index() {
     }, [renderedPage, setSearchParams])
 
     return (
-        <div>
-            <Button onClick={() => setRenderedPage(undefined)}>back</Button>
-            {renderedPage === 'infinite-pagination' ?
-                <PokemonsInfinitePagination /> :
-                renderedPage === 'controlled-pagination' ?
-                    <PokimonsControlledPagination />
-                    : <>
-                        <button onClick={() => setRenderedPage('infinite-pagination')}>Infinite Pagination</button>
-                        <button onClick={() => setRenderedPage('controlled-pagination')}>Controlled Pagination</button>
-                    </>}
-
-        </div>
+        <Box sx={{
+            minHeight: '100vh',
+            background: 'linear-gradient(135deg, #eefcf3 0%, #d4fbe8 100%)',
+        }}>
+            <Container maxWidth='xl'>
+                <PokemonsPage setRenderedPage={setRenderedPage} />
+                {renderedPage === 'infinite-pagination' ?
+                    <PokemonsInfinitePagination /> :
+                    renderedPage === 'controlled-pagination' ?
+                        <PokimonsControlledPagination />
+                        :
+                        ''}
+            </Container>
+        </Box>
     )
 }
