@@ -2,8 +2,12 @@ import React from 'react'
 import { Pokemon } from '../../../types/pokemon'
 import { Box, Typography, Chip, LinearProgress } from '@mui/material'
 import { Bolt, AttachFile, Scale } from '@mui/icons-material'
+import StraightenIcon from '@mui/icons-material/Straighten';
+import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
 
 export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
+    console.log(pokemon);
+
     const getStatName = (statName: string) => {
         switch (statName) {
             case 'hp': return 'HP'
@@ -43,86 +47,92 @@ export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
     return (
         <Box
             sx={{
-                width: '800px',
-                height: '750px',
+                maxWidth: '800px',
+                height: { sx: '', lg: '750px' },
                 backgroundColor: 'white',
-                borderRadius: '16px',
+                borderRadius: '8px',
                 boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
                 overflow: 'hidden',
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                margin: '2rem auto'
             }}
         >
-            {/* Header */}
             <Box
                 sx={{
                     background: 'linear-gradient(90deg, #8B5CF6 0%, #EC4899 100%)',
                     padding: '20px',
-                    display: 'flex',
                     alignItems: 'center',
-                    gap: '8px'
+                    gap: '8px',
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center'
                 }}
             >
-                <Bolt sx={{ color: 'white', fontSize: '20px' }} />
-                <Typography
-                    variant="h4"
-                    sx={{
-                        color: 'white',
-                        fontWeight: 'bold',
-                        textTransform: 'capitalize'
-                    }}
-                >
-                    {pokemon.name}
-                </Typography>
+                <Box sx={{ display: 'flex', margin: 'auto', gap: '1rem', alignItems: 'center' }}>
+                    <Bolt sx={{ color: 'white', fontSize: '30px' }} />
+                    <Typography
+                        variant="h4"
+                        sx={{
+                            color: 'white',
+                            fontWeight: 'bold',
+                            textTransform: 'capitalize'
+                        }}
+                    >
+                        {pokemon.name}
+                    </Typography>
+                </Box>
                 <Typography
                     sx={{
                         color: 'white',
                         fontSize: '14px',
-                        marginLeft: 'auto'
+                        textAlign: 'center'
                     }}
                 >
                     #{pokemon.id.toString().padStart(3, '0')}
                 </Typography>
             </Box>
 
-            {/* Main Content */}
             <Box
                 sx={{
                     padding: '24px',
                     flex: 1,
                     display: 'flex',
-                    gap: '24px'
+                    gap: '24px',
+                    flexDirection: {
+                        xs: 'column',
+                        md: 'row'
+                    }
                 }}
             >
                 {/* Left Side */}
                 <Box sx={{ flex: 1 }}>
-                    {/* Pokemon Image */}
                     <Box
                         sx={{
-                            width: '200px',
-                            height: '200px',
+                            width: '100%',
+                            aspectRatio: '1',
                             borderRadius: '50%',
-                            backgroundColor: '#F8F9FA',
+                            backgroundColor: '#f7f8fa',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             marginBottom: '16px',
-                            border: '4px solid #E9ECEF'
                         }}
                     >
                         <img
                             src={pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default}
                             alt={pokemon.name}
                             style={{
-                                width: '180px',
-                                height: '180px',
+                                width: '100%',
+                                height: '100%',
                                 objectFit: 'contain'
                             }}
                         />
                     </Box>
 
                     {/* Type */}
-                    <Box sx={{ marginBottom: '16px' }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
                         <Chip
                             label={pokemon.types[0].type.name}
                             sx={{
@@ -139,36 +149,34 @@ export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
                         <Box
                             sx={{
                                 flex: 1,
-                                backgroundColor: 'white',
+                                backgroundColor: '#fafbfd',
                                 borderRadius: '8px',
-                                padding: '12px',
-                                border: '1px solid #E9ECEF',
+                                padding: '20px',
                                 textAlign: 'center'
                             }}
                         >
                             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', marginBottom: '4px' }}>
-                                <AttachFile sx={{ fontSize: '16px', color: '#6C757D' }} />
-                                <Typography sx={{ fontSize: '12px', color: '#6C757D' }}>Height</Typography>
+                                <StraightenIcon sx={{ fontSize: '16px', color: '#6C757D', transform: 'rotate(45deg)' }} />
+                                <Typography sx={{ fontSize: '16px', color: '#6C757D' }}>Height</Typography>
                             </Box>
-                            <Typography sx={{ fontWeight: 'bold' }}>
+                            <Typography sx={{ fontWeight: '800' }}>
                                 {(pokemon.height / 10).toFixed(1)} m
                             </Typography>
                         </Box>
                         <Box
                             sx={{
                                 flex: 1,
-                                backgroundColor: 'white',
+                                backgroundColor: '#fafbfd',
                                 borderRadius: '8px',
-                                padding: '12px',
-                                border: '1px solid #E9ECEF',
+                                padding: '20px',
                                 textAlign: 'center'
                             }}
                         >
                             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', marginBottom: '4px' }}>
-                                <Scale sx={{ fontSize: '16px', color: '#6C757D' }} />
-                                <Typography sx={{ fontSize: '12px', color: '#6C757D' }}>Weight</Typography>
+                                <WorkOutlineIcon sx={{ fontSize: '16px', color: '#6C757D' }} />
+                                <Typography sx={{ fontSize: '16px', color: '#6C757D' }}>Weight</Typography>
                             </Box>
-                            <Typography sx={{ fontWeight: 'bold' }}>
+                            <Typography sx={{ fontWeight: '800' }}>
                                 {(pokemon.weight / 10).toFixed(1)} kg
                             </Typography>
                         </Box>
@@ -181,19 +189,19 @@ export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
                     <Typography
                         variant="h6"
                         sx={{
-                            fontWeight: 'bold',
+                            fontWeight: '800',
                             marginBottom: '16px',
                             color: '#212529'
                         }}
                     >
                         Base Stats
                     </Typography>
-                    <Box sx={{ marginBottom: '24px' }}>
+                    <Box sx={{ marginBottom: '24px', fontWeight: 'bold' }}>
                         {pokemon.stats.map((stat, index) => (
                             <Box key={index} sx={{ marginBottom: '12px' }}>
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                    <Typography sx={{ fontSize: '14px', fontWeight: 'bold', minWidth: '80px' }}>
-                                        {getStatName(stat.stat.name)}:
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                                    <Typography sx={{ fontSize: '14px', fontWeight: 'bold', minWidth: '80px', width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+                                        <span> {getStatName(stat.stat.name)}:</span>  {stat.base_stat}
                                     </Typography>
                                     <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', gap: '8px' }}>
                                         <Box sx={{ flex: 1, position: 'relative' }}>
@@ -215,9 +223,7 @@ export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
                                                 />
                                             </Box>
                                         </Box>
-                                        <Typography sx={{ fontSize: '14px', fontWeight: 'bold', minWidth: '30px' }}>
-                                            {stat.base_stat}
-                                        </Typography>
+
                                     </Box>
                                 </Box>
                             </Box>
@@ -241,7 +247,8 @@ export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
                                 <Chip
                                     label={ability.ability.name}
                                     sx={{
-                                        backgroundColor: '#F8F9FA',
+                                        border: ability.is_hidden ? 'none' : '3px solid #E9ECEF',
+                                        backgroundColor: ability.is_hidden ? '#F8F9FA' : "#fff",
                                         color: '#6C757D',
                                         textTransform: 'capitalize',
                                         fontSize: '12px'
@@ -260,7 +267,7 @@ export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
                     <Typography
                         variant="h6"
                         sx={{
-                            fontWeight: 'bold',
+                            fontWeight: '800',
                             marginBottom: '8px',
                             color: '#212529'
                         }}
@@ -269,9 +276,9 @@ export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
                     </Typography>
                     <Typography
                         sx={{
-                            color: '#8B5CF6',
+                            color: '#924fd3',
                             fontWeight: 'bold',
-                            fontSize: '18px'
+                            fontSize: '24px'
                         }}
                     >
                         {pokemon.base_experience} XP

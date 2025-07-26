@@ -24,6 +24,9 @@ export const PokemonDetailPage: React.FC = () => {
     <Box sx={{
       background: 'linear-gradient(135deg, #faf4ff 0%, #fbe7f3 100%)',
       minHeight: '100vh',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
     }}>
       <PokemonCard pokemon={pokemon} />
     </Box>
