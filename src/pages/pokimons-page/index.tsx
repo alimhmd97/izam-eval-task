@@ -22,6 +22,8 @@ export default function Index() {
         }
     }, [renderedPage])
 
+
+
     return (
         <Box sx={{
             minHeight: '100vh',
