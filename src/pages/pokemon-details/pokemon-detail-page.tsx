@@ -6,7 +6,8 @@ import PokemonCardSkeleton from './_components/pokemon-card-skeleton';
 import { Box } from '@mui/material';
 import { MUIButton } from '../../components/mui-buttton';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-export const PokemonDetailPage: React.FC = () => {
+
+const PokemonDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { data: pokemon, isLoading, error } = usePokemon(id || '');
   const navigate = useNavigate();
@@ -55,4 +56,5 @@ export const PokemonDetailPage: React.FC = () => {
       <PokemonCard pokemon={pokemon} />
     </Box>
   );
-}; 
+};
+export default PokemonDetailPage;

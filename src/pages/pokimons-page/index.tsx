@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { PokemonsInfinitePagination } from './pokemons-infinite-pagination'
 import PokimonsControlledPagination from './pokimons-controlled-pagination'
-import { Box, Button, Container } from '@mui/material'
+import { Box, Container } from '@mui/material'
 import PokemonsPage from './pokemons-page'
 
 export type PaginationMode = 'infinite-pagination' | 'controlled-pagination'
