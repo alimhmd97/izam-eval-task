@@ -1,3 +1,11 @@
+## ⚠️ Important Note: Pokemon Image Loading Issue
+
+**Issue**: The Pokemon API doesn't include image URLs in the initial list request. Images are only available when fetching individual Pokemon details.
+
+![Pokemon Image Loading Issue](image.png)
+
+---
+
 # 🎮 Pokemon Application
 
 A modern React application built with TypeScript that showcases Pokemon data with advanced pagination techniques, infinite scrolling, and a beautiful Material-UI interface.
