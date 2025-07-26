@@ -3,7 +3,12 @@ import { PaginationMode } from '.'
 import { Box, Typography } from '@mui/material'
 import BoltRoundedIcon from '@mui/icons-material/BoltRounded';
 import { MUIButton } from '../../components/mui-buttton';
+import { useSearchParams } from 'react-router-dom';
+
 export default function PokemonsPage({ setRenderedPage }: { setRenderedPage: (page: PaginationMode | undefined) => void }) {
+    const [searchParams] = useSearchParams();
+    const currentPage = searchParams.get('pageType') as PaginationMode;
+
     return (
         <Box sx={{
             width: "100%",
@@ -23,8 +28,25 @@ export default function PokemonsPage({ setRenderedPage }: { setRenderedPage: (pa
             </Typography>
             <Typography variant='body2'>Discover and explore pokemon with infinite scroll </Typography>
             <div>
-                <MUIButton sx={{ color: 'black', background: 'white' }} onClick={() => setRenderedPage('infinite-pagination')}>Infinite Scroll</MUIButton>
-                <MUIButton sx={{ color: 'white', background: 'black' }} onClick={() => setRenderedPage('controlled-pagination')}>Page Controls</MUIButton></div>
+                <MUIButton
+                    sx={{
+                        color: currentPage === 'infinite-pagination' ? 'white' : 'black',
+                        background: currentPage === 'infinite-pagination' ? 'black' : 'white'
+                    }}
+                    onClick={() => setRenderedPage('infinite-pagination')}
+                >
+                    Infinite Scroll
+                </MUIButton>
+                <MUIButton
+                    sx={{
+                        color: currentPage === 'controlled-pagination' ? 'white' : 'black',
+                        background: currentPage === 'controlled-pagination' ? 'black' : 'white'
+                    }}
+                    onClick={() => setRenderedPage('controlled-pagination')}
+                >
+                    Page Controls
+                </MUIButton>
+            </div>
 
         </Box>
     )

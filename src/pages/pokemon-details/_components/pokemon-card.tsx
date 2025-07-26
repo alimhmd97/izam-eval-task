@@ -55,7 +55,7 @@ export default function PokemonCard({ pokemon }: { pokemon: Pokemon }) {
                 overflow: 'hidden',
                 display: 'flex',
                 flexDirection: 'column',
-                margin: '2rem auto'
+                margin: '4rem 1rem'
             }}
         >
             <Box

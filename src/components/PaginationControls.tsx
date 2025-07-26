@@ -4,12 +4,10 @@ import {
   PaginationItem,
   Box,
   Typography,
-  FormControl,
-  Select,
-  MenuItem,
-  SelectChangeEvent
+
 } from '@mui/material';
-import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import { NavigateNext, NavigateBefore } from '@mui/icons-material';
 
 interface PaginationControlsProps {
   totalCount: number;
@@ -56,27 +54,6 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
     onPageChange?.(page);
   };
 
-  const handlePageSizeChange = (event: SelectChangeEvent<number>) => {
-    const newPageSize = event.target.value as number;
-    setCurrentPageSize(newPageSize);
-    setCurrentPage(1);
-    updateURLParams(1, newPageSize);
-    onPageSizeChange?.(newPageSize);
-  };
-
-  useEffect(() => {
-    const urlPage = parseInt(searchParams.get('page') || '1');
-    const urlPageSize = parseInt(searchParams.get('pageSize') || pageSize.toString());
-
-    if (urlPage !== currentPage) {
-      setCurrentPage(urlPage);
-    }
-
-    if (urlPageSize !== currentPageSize) {
-      setCurrentPageSize(urlPageSize);
-    }
-  }, [searchParams, pageSize]);
-
   if (totalCount === 0) {
     return null;
   }
@@ -86,49 +63,15 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
       className={className}
       sx={{
         display: 'flex',
-        flexDirection: { xs: 'column', sm: 'row' },
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'center',
+        flexDirection: 'column',
         gap: 2,
         py: 2,
         px: 1
       }}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 2,
-          flexWrap: 'wrap'
-        }}
-      >
-        {showPageSizeSelector && (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography variant="body2" color="text.secondary">
-              Items per page:
-            </Typography>
-            <FormControl size="small" sx={{ minWidth: 80 }}>
-              <Select
-                value={currentPageSize}
-                onChange={handlePageSizeChange}
-                displayEmpty
-              >
-                {pageSizeOptions.map((size) => (
-                  <MenuItem key={size} value={size}>
-                    {size}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
-        )}
 
-        {showTotalCount && (
-          <Typography variant="body2" color="text.secondary">
-            {`${Math.min((currentPage - 1) * currentPageSize + 1, totalCount)}-${Math.min(currentPage * currentPageSize, totalCount)} of ${totalCount}`}
-          </Typography>
-        )}
-      </Box>
 
       <Pagination
         count={totalPages}
@@ -136,23 +79,70 @@ export const PaginationControls: React.FC<PaginationControlsProps> = ({
         onChange={handlePageChange}
         color="primary"
         size="medium"
-        showFirstButton
-        showLastButton
-        renderItem={(item) => (
-          <PaginationItem
-            {...item}
-            sx={{
-              '&.Mui-selected': {
-                backgroundColor: 'primary.main',
-                color: 'primary.contrastText',
-                '&:hover': {
-                  backgroundColor: 'primary.dark',
+        renderItem={(item) => {
+          if (item.type === 'previous') {
+            return (
+              <PaginationItem
+                {...item}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.5,
+                  '& .MuiPaginationItem-icon': {
+                    marginRight: 0,
+                  },
+                }}
+              >
+                <NavigateBefore />
+                Back
+              </PaginationItem>
+            );
+          }
+          if (item.type === 'next') {
+            return (
+              <PaginationItem
+                {...item}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 0.5,
+                  '& .MuiPaginationItem-icon': {
+                    marginLeft: 0,
+                  },
+                }}
+              >
+                Next
+                <NavigateNext />
+              </PaginationItem>
+            );
+          }
+          return (
+            <PaginationItem
+              {...item}
+              sx={{
+                borderRadius: '8px',
+                '&.Mui-selected': {
+                  backgroundColor: '#000000',
+                  color: '#ffffff',
+                  '&:hover': {
+                    backgroundColor: '#333333',
+                  },
                 },
-              },
-            }}
-          />
-        )}
+                '&:not(.Mui-selected)': {
+                  '&:hover': {
+                    backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                  },
+                },
+              }}
+            />
+          );
+        }}
       />
+      {showTotalCount && (
+        <Typography variant="body2" color="text.secondary">
+          Page {currentPage} {`of ${Math.ceil(totalCount / currentPageSize)}`} ({currentPageSize}Pokemon shown)
+        </Typography>
+      )}
     </Box>
   );
 }; 

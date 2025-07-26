@@ -10,17 +10,17 @@ export type PaginationMode = 'infinite-pagination' | 'controlled-pagination'
 export default function Index() {
     const [searchParams, setSearchParams] = useSearchParams()
     const [renderedPage, setRenderedPage] = useState<PaginationMode | undefined>(() => {
-        const pageParam = searchParams.get('page')
-        return (pageParam as PaginationMode) || undefined
+        const pageParam = searchParams.get('pageType')
+        return (pageParam as PaginationMode) || 'infinite-pagination'
     })
 
     useEffect(() => {
         if (renderedPage) {
-            setSearchParams({ page: renderedPage })
+            setSearchParams({ pageType: renderedPage })
         } else {
             setSearchParams({})
         }
-    }, [renderedPage, setSearchParams])
+    }, [renderedPage])
 
     return (
         <Box sx={{

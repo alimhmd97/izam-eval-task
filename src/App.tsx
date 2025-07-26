@@ -1,11 +1,14 @@
 import './App.css';
 import { AppRoutes } from './routes/AppRoutes';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 function App() {
   return (
-    <div className="App">
-      <AppRoutes />
-    </div>
+    <ErrorBoundary>
+      <div className="App">
+        <AppRoutes />
+      </div>
+    </ErrorBoundary>
   );
 }
 

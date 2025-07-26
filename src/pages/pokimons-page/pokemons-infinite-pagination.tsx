@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useInfinitePokemonList } from '../../hooks/usePokemonList';
 import { useLastItemVisible } from '../../hooks/use-infinite-scroll-pagination';
 import { pageItemsCount } from '../../utils/consts';
@@ -9,12 +9,17 @@ import {
   CircularProgress,
   Alert,
   AlertTitle,
-  Paper
+  Switch,
+  FormControlLabel,
 } from '@mui/material';
 import { Error as ErrorIcon } from '@mui/icons-material';
 import PokemonCard from './_components/pokemon-card';
+import { MUIButton } from '../../components/mui-buttton';
+import CardSkeleton from './_components/card-Skeleton';
 
 export const PokemonsInfinitePagination: React.FC = () => {
+  const [isSmoothScroll, setIsSmoothScroll] = useState(true);
+
   const {
     data,
     error,
@@ -63,94 +68,92 @@ export const PokemonsInfinitePagination: React.FC = () => {
   }
 
   return (
-    <Box sx={{ minHeight: '100vh' }}>
-      <Typography
-        variant="h3"
-        component="h1"
-        align="center"
+    <Container maxWidth="xl" >
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        gap: 2,
+        mb: 2
+      }}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={isSmoothScroll}
+              onChange={(e) => setIsSmoothScroll(e.target.checked)}
+              color="primary"
+            />
+          }
+          label={isSmoothScroll ? "Smooth Infinite Scroll" : "Load More Button"}
+        />
+      </Box>
+
+      <Box
         sx={{
-          mb: 4,
-          fontWeight: 'bold',
-          color: 'text.primary'
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 3,
+          justifyContent: 'center'
         }}
       >
-        Pokemon Collection
-      </Typography>
+        {pokemons.map((pokemon, index) => {
+          const isLastElement = index === pokemons.length - 1;
 
-      {isLoading ? (
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            py: 10
-          }}
-        >
-          <CircularProgress size={60} />
-        </Box>
-      ) : (
+          return (
+            <Box
+              key={index}
+              ref={isLastElement && isSmoothScroll ? lastItemRef : undefined}
+              sx={{
+                flex: '0 0 auto',
+                width: {
+                  xs: '100%',
+                  sm: 'calc(50% - 12px)',
+                  md: 'calc(33.333% - 16px)',
+                  lg: 'calc(25% - 18px)',
+                  xl: 'calc(20% - 19.2px)'
+                },
+                maxWidth: {
+                  xs: '100%',
+                  sm: 'calc(50% - 12px)',
+                  md: 'calc(33.333% - 16px)',
+                  lg: 'calc(25% - 18px)',
+                  xl: 'calc(20% - 19.2px)'
+                }
+              }}
+            >
+
+              <PokemonCard
+                imageUrl={pokemon.url}
+                index={index}
+                name={pokemon.name}
+              />
+            </Box>
+          );
+        })}
+      </Box>
+      {isLoading &&
         <Box
           sx={{
             display: 'flex',
             flexWrap: 'wrap',
-            gap: 3,
-            justifyContent: 'center'
+            gap: 2,
           }}
         >
-          {pokemons.map((pokemon, index) => {
-            const isLastElement = index === pokemons.length - 1;
-
-            return (
-              <Box
-                key={index}
-                ref={isLastElement ? lastItemRef : undefined}
-                sx={{
-                  flex: '0 0 auto',
-                  width: {
-                    xs: '100%',
-                    sm: 'calc(50% - 12px)',
-                    md: 'calc(33.333% - 16px)',
-                    lg: 'calc(25% - 18px)',
-                    xl: 'calc(20% - 19.2px)'
-                  },
-                  maxWidth: {
-                    xs: '100%',
-                    sm: 'calc(50% - 12px)',
-                    md: 'calc(33.333% - 16px)',
-                    lg: 'calc(25% - 18px)',
-                    xl: 'calc(20% - 19.2px)'
-                  }
-                }}
-              >
-
-                <PokemonCard
-                  imageUrl={pokemon.url}
-                  index={index}
-                  name={pokemon.name}
-                />
-              </Box>
-            );
-          })}
+          {Array.from({ length: 20 }).map((_, index) => (
+            <CardSkeleton key={index} />
+          ))}
         </Box>
-      )}
+      }
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 2, gap: 2 }}>
+        {isFetchingNextPage ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', py: 4, gap: 2 }}><CircularProgress size={30} sx={{ color: 'green' }} /> showing more pokemons</Box>
+        ) : isSmoothScroll ? null : <MUIButton onClick={() => fetchNextPage()}>
+          Load more
+        </MUIButton>}
+      </Box>
 
-      {isFetchingNextPage && (
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            py: 4,
-            gap: 2
-          }}
-        >
-          <CircularProgress size={24} />
-          <Typography variant="body2" color="text.secondary">
-            Loading more Pokemon...
-          </Typography>
-        </Box>
-      )}
-
+      <Box sx={{ textAlign: 'center', pb: 5 }}>  Showing {pokemons?.length} pokemons
+      </Box>
       {!hasNextPage && data && data.pages.length > 0 && (
         <Box
           sx={{
@@ -163,6 +166,6 @@ export const PokemonsInfinitePagination: React.FC = () => {
           </Typography>
         </Box>
       )}
-    </Box>
+    </Container>
   );
 };
