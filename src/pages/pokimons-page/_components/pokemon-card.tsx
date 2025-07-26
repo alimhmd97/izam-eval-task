@@ -39,7 +39,7 @@ export default function PokemonCard({ imageUrl, index, name }: PokemonCardProps)
             <CardContent sx={{ padding: 0, textAlign: 'center', width: '100%' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%', justifyContent: 'space-between' }}>
                     <img
-                        src={imageUrl}
+                        src={imageUrl || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png'}
                         alt={name}
                         loading="lazy"
                         style={{
