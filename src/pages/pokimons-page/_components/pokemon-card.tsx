@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, Typography, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,8 +9,14 @@ interface PokemonCardProps {
 }
 
 export default function PokemonCard({ imageUrl, index, name }: PokemonCardProps) {
+    const [imageError, setImageError] = useState(false);
+
     const formatIndex = (index: number) => {
         return `#${index.toString().padStart(3, '0')}`;
+    };
+
+    const handleImageError = () => {
+        setImageError(true);
     };
 
     const navigate = useNavigate();
@@ -36,19 +42,26 @@ export default function PokemonCard({ imageUrl, index, name }: PokemonCardProps)
                 },
             }}
         >
-            <CardContent sx={{ padding: 0, textAlign: 'center', width: '100%' }}>
+            <CardContent sx={{ padding: '0 !important', textAlign: 'center', width: '100%' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%', justifyContent: 'space-between' }}>
-                    <img
-                        src={imageUrl || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png'}
-                        alt={name}
-                        loading="lazy"
-                        style={{
-                            width: '120px',
-                            height: '120px',
-                            objectFit: 'contain',
-                            marginBottom: '8px',
-                        }}
-                    />
+                    <Box sx={{
+                        width: '200px',
+                        minHeight: '160px',
+                        marginBottom: '8px',
+                        backgroundColor: '#f0f0f0',
+                    }}>
+                        <img
+                            src={imageError ? 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/8.png' : imageUrl}
+                            alt={name}
+                            loading="lazy"
+                            onError={handleImageError}
+                            style={{
+                                width: '100%',
+                                objectFit: 'fill',
+                                marginBottom: '8px',
+                            }}
+                        />
+                    </Box>
                     <Box>
                         <Typography
                             variant="h6"
